@@ -1,0 +1,8 @@
+### Create account
+POST http://127.0.0.1:8000/bank/account/
+Content-Type: application/json
+X-CSRFToken: rqbB9XA5at3ln1P9HXq7KNxy2L9vAGpu
+
+{
+    "account_type": "CA"
+}

@@ -1,0 +1,2 @@
+GET http://127.0.0.1:8000/bank/transactions/extract/?start_date=2026-03-22&end_date=2026-04-22 HTTP/1.1
+Content-Type: application/json
