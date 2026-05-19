@@ -23,11 +23,13 @@ export default function Payment() {
         },
       );
       const data = await response.json();
+
       if (!response.ok) {
         setErrorMessage(data.detail || 'Não foi possível carregar o boleto');
         console.log(data);
         return;
       }
+
       navigate('paymentslip/detail', {
         state: {
           paymentSlipDetails: data.detail || data,

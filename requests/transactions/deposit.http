@@ -1,7 +1,8 @@
 POST http://127.0.0.1:8000/bank/transactions/deposit/ HTTP/1.1
 Content-Type: application/json
-X-CSRFToken: vDBCOA5cRaBG9LyFqa1DQllqV0WOBmji
+X-CSRFToken: irVx9Wz9BarmiiUAAcp1R2u0xLqwAOh5
 
 {
-    "amount": "16.23"
+    "amount": "36.44",
+    "idempotency_key": "5e6de67a-5202-469e-8b9a-5a654ce2dd59"
 }

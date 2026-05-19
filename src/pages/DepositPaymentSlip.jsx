@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useOutletContext } from 'react-router-dom';
+import { useLocation, useOutletContext } from 'react-router-dom';
 import Menu from '../components/Menu';
 import { formatAccounts } from '../helpers/formatAccounts';
 import { formatCurrency } from '../helpers/formatCurrency';
@@ -11,8 +11,10 @@ import { useErrorHandler } from '../hooks/useErrorHandler';
 
 export default function PaymentSlip() {
   const [copybutton, setCopybutton] = useState(false);
+  const location = useLocation();
+  const paymentSlipDetails = location.state?.paymentSlipDetails;
   const { navigateToError } = useErrorHandler();
-  const { menuOpen, setMenuOpen, paymentSlipDetails } = useOutletContext();
+  const { menuOpen, setMenuOpen } = useOutletContext();
   const navigateRef = useRef(navigateToError);
 
   useEffect(() => {
@@ -38,31 +40,27 @@ export default function PaymentSlip() {
             <h1 className="text-2xl text-gray-800 font-semibold">Boleto</h1>
             <div className="flex justify-between">
               <div>
-                <h2 className="text-gray-500 text-sm select-none">
-                  Linha digitável
-                </h2>
-                <div className="flex gap-3">
+                <div className="flex gap-4 text-sm">
+                  <h2 className="text-gray-500 select-none">Linha digitável</h2>
+                  <button
+                    className="cursor-pointer"
+                    onClick={() => handleCopy()}
+                  >
+                    {copybutton ? <CopiedButton /> : <CopyButton />}
+                  </button>
+                </div>
+                <div className="flex">
                   <div>
                     <span className="text-gray-900 font-semibold">
                       {paymentSlipDetails.digitable_line}
                     </span>
-                  </div>
-                  <div>
-                    <button
-                      className={
-                        copybutton ? 'text-green-700 active:text-gray-900' : ''
-                      }
-                      onClick={() => handleCopy()}
-                    >
-                      {copybutton === true ? <CopiedButton /> : <CopyButton />}
-                    </button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           {/* payment slip - Details */}
-          <div className="flex flex-col justify-between bg-white/70 rounded-2xl p-6 shadow-md border gap-8">
+          <div className="flex flex-col justify-between bg-white/70 rounded-2xl p-6 shadow-md border gap-4">
             <div>
               <span className="text-gray-500 text-sm select-none">
                 Número do documento

@@ -9,7 +9,7 @@ import Menu from './components/Menu';
 export default function Layout() {
   const { user } = useOutletContext();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [paymentSlipDetails, setPaymentSlipDetails] = useState('');
+  const [hideValue, setHideValue] = useState(true);
 
   const userOption = user
     ? [
@@ -46,8 +46,8 @@ export default function Layout() {
               user,
               userOption,
               accountOption,
-              paymentSlipDetails,
-              setPaymentSlipDetails,
+              hideValue,
+              setHideValue,
             }}
           />
         }

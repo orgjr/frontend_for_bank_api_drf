@@ -1,11 +1,12 @@
-import { useOutletContext, useLocation } from 'react-router-dom';
+import { useOutletContext, useLocation, useNavigate } from 'react-router-dom';
 import Menu from '../components/Menu';
-import { getCSRFToken } from '../helpers/getCsrfToken';
 import { formatCurrency } from '../helpers/formatCurrency';
 import { useErrorHandler } from '../hooks/useErrorHandler';
 import { formatIsoDatetimeString } from '../helpers/formatIsoDatetimeString';
 import { formatIsoDateString } from '../helpers/formatIsoDateString';
 import { formatTitle } from '../helpers/formatTitle';
+import { useHandlePayment } from '../hooks/useHandlePayment';
+import { useState } from 'react';
 
 export default function PaymentSlip() {
   const { menuOpen, setMenuOpen } = useOutletContext();
@@ -13,6 +14,9 @@ export default function PaymentSlip() {
   const location = useLocation();
   const paymentSlipDetails = location.state?.paymentSlipDetails;
   const today = new Date().toISOString().split('T')[0];
+  const { handlePayment } = useHandlePayment();
+  const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState('');
 
   if (!paymentSlipDetails) {
     navigateToError(400, 'Código inválido ou acesso direto não permitido');
@@ -28,28 +32,24 @@ export default function PaymentSlip() {
     );
   }
 
-  // todo
+  // only for testing purposes
+  const link = 'http://localhost:8000/bank/transactions/payment/';
+  const payload = {
+    amount: paymentSlipDetails.amount,
+    idempotency_key: String(crypto.randomUUID()),
+  };
+
   async function handleSubmit() {
-    const response = await fetch(
-      'http://localhost:8000/bank/transaction/payment/',
-      {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': getCSRFToken(),
-        },
-        body: JSON.stringify({
-          amount: paymentSlipDetails.amount,
-        }),
-      },
-    );
-    const data = await response.json();
-    if (!response.ok) {
-      console.log(data);
+    const result = await handlePayment(link, payload);
+
+    if (result.status !== 200) {
+      setErrorMessage(result);
       return;
     }
-    console.log(data);
+
+    navigate('/user/payment/paymentslip/done', {
+      state: { paymentSlipDetailsDone: result },
+    });
   }
 
   return (
@@ -139,7 +139,7 @@ export default function PaymentSlip() {
             <span className="text-gray-900 font-semibold">
               {paymentSlipDetails.payment_date
                 ? formatIsoDateString(paymentSlipDetails.payment_date)
-                : null}
+                : 'N/A'}
             </span>
           </div>
         </div>
@@ -165,7 +165,7 @@ export default function PaymentSlip() {
         <h2 className="text-gray-500 text-lg mb-4 select-none">
           Pagar com saldo da conta
         </h2>
-
+        <h2>{errorMessage}</h2>
         <div className="flex justify-center">
           <div>
             <button

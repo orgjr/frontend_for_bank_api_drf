@@ -2,10 +2,19 @@ import { useOutletContext } from 'react-router-dom';
 import Menu from '../components/Menu';
 import { formatCurrency } from '../helpers/formatCurrency';
 import { useErrorHandler } from '../hooks/useErrorHandler';
+import Eye from '../components/Eye';
+import EyeSlash from '../components/EyeSlash';
 
 export default function UserDashboard() {
-  const { menuOpen, setMenuOpen, user, userOption, accountOption } =
-    useOutletContext();
+  const {
+    menuOpen,
+    setMenuOpen,
+    user,
+    userOption,
+    accountOption,
+    hideValue,
+    setHideValue,
+  } = useOutletContext();
   const { navigateToError } = useErrorHandler();
 
   if (!user || !userOption || !accountOption) {
@@ -24,13 +33,19 @@ export default function UserDashboard() {
           <div className="flex gap-8">
             <div className="flex flex-col w-full gap-8">
               {/* Card - Saudação */}
-              <div className="bg-white/70 h-20 rounded-2xl p-6 shadow-md border">
+              <div className="flex bg-white/70 h-20 rounded-2xl p-6 shadow-md border gap-4">
                 <h1 className="text-2xl text-gray-800">
                   Olá,{' '}
                   <span className="font-bold">
                     {user.first_name} {user.last_name}!
                   </span>
                 </h1>
+                <button
+                  className="cursor-pointer"
+                  onClick={() => setHideValue((prev) => !prev)}
+                >
+                  {hideValue ? <EyeSlash /> : <Eye />}
+                </button>
               </div>
 
               {/* Card - Dados do usuário */}
@@ -73,9 +88,17 @@ export default function UserDashboard() {
                 <span className="text-gray-500 text-sm select-none">Saldo</span>
                 <p className="text-2xl">
                   <span className="text-gray-500 text-sm select-none">R$ </span>
-                  <span className="text-green-600 font-bold">
-                    {formatCurrency(user.balance)}
-                  </span>
+                  {hideValue ? (
+                    <span className="bg-black/20 blur-lg rounded-2xl select-none">
+                      <span className="text-gray-900 font-bold">
+                        {formatCurrency(user.balance)}
+                      </span>
+                    </span>
+                  ) : (
+                    <span className="text-green-600 font-bold">
+                      {formatCurrency(user.balance)}
+                    </span>
+                  )}
                 </p>
               </div>
             </div>

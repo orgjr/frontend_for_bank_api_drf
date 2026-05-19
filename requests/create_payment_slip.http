@@ -1,7 +1,8 @@
-POST http://localhost:8000/bank/payment_slip/ HTTP/1.1
+POST http://127.0.0.1:8000/bank/payment_slip/ HTTP/1.1
 Content-Type: application/json
+X-CSRFToken: irVx9Wz9BarmiiUAAcp1R2u0xLqwAOh5
 
 {
-    "payer_name": "Anastácia",
-    "amount": "354.86"
+    "payer_name": "Hebert",
+    "amount": "198.02"
 }

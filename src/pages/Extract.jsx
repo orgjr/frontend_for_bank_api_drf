@@ -16,7 +16,7 @@ export default function Extract() {
   const [startDate, setStartDate] = useState(() => getPastDate(15));
 
   const today = useMemo(() => {
-    return new Date().toISOString().split('T')[0];
+    return new Date().toLocaleDateString().split('/').reverse().join('-');
   }, []);
   const past15 = useMemo(() => getPastDate(15), []);
   const past30 = useMemo(() => getPastDate(30), []);

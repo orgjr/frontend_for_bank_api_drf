@@ -13,6 +13,7 @@ import PaymentSlip from '../pages/PaymentSlip';
 import DepositPaymentSlip from '../pages/DepositPaymentSlip';
 import ErrorPage from '../components/ErrorBoundary';
 import PrivateRoute from '../components/PrivateRoute';
+import PaymentSlipDone from '../pages/PaymentSlipDone';
 
 export const router = createBrowserRouter([
   {
@@ -41,6 +42,7 @@ export const router = createBrowserRouter([
           { path: 'extract', element: <Extract /> },
           { path: 'payment', element: <Payment /> },
           { path: 'payment/paymentslip/detail', element: <PaymentSlip /> },
+          { path: 'payment/paymentslip/done', element: <PaymentSlipDone /> },
           { path: 'transfer', element: <Transfer /> },
         ],
       },

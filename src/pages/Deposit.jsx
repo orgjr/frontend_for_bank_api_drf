@@ -6,8 +6,7 @@ import { getCSRFToken } from '../helpers/getCsrfToken';
 import { useErrorHandler } from '../hooks/useErrorHandler';
 
 export default function Deposit() {
-  const { menuOpen, setMenuOpen, user, setPaymentSlipDetails } =
-    useOutletContext();
+  const { menuOpen, setMenuOpen, user } = useOutletContext();
   const [displayValue, setDisplayValue] = useState('');
   const [rawValue, setRawValue] = useState(0);
   const [error, setError] = useState('');
@@ -38,6 +37,7 @@ export default function Deposit() {
           amount: rawValue,
         }),
       });
+
       const data = await response.json();
 
       if (!response.ok) {
@@ -47,11 +47,13 @@ export default function Deposit() {
         return;
       }
 
-      setPaymentSlipDetails(data);
-      navigate('paymentslip/detail');
-      setIsLoading(false);
+      navigate('paymentslip/detail', {
+        state: { paymentSlipDetails: data.detail || data },
+      });
     } catch (err) {
       navigateToError(500, 'Erro ao processar depósito', err);
+    } finally {
+      setIsLoading(false);
     }
   }
 
